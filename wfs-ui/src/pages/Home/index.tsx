@@ -1,7 +1,7 @@
 import { Button, Link, TextField } from '@material-ui/core'
 import { getCommunityHealthServiceArea } from 'api/community-health-service-area/GetCommunityHealthServiceArea'
 import { FeatureCollection } from 'api/model/model'
-import React, { useState } from 'react'
+import React, { useState, MouseEvent } from 'react'
 import { CHSA_IMAP_LINK } from 'utils/constants'
 import LaunchIcon from '@material-ui/icons/Launch'
 
@@ -11,7 +11,8 @@ const HomePage: React.FC = () => {
   const [error, seterror] = useState<string>('')
   const [chsa, setChsa] = useState('')
 
-  const onSubmit = async () => {
+  const onSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
     await getCommunityHealthServiceArea({ lat: latitude, lng: longitude })
       .then((res: FeatureCollection) => {
         if (res.numberReturned < 1) {
