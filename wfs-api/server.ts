@@ -35,15 +35,15 @@ app.get('/*', (req, res) => {
 
 app.post('/track', async (req, res) => {
   const url = req.body.url
-  const conn = await pool.promise().getConnection()
+
   try {
+    const conn = await pool.promise().getConnection()
     conn.execute('INSERT INTO `auditlog` (`url`) VALUES (?)', [url])
     conn.commit()
     res.send('OK')
-  } catch (err) {
-    throw err
-  } finally {
     conn.release()
+  } catch (err) {
+    res.status(500).send(err)
   }
 })
 

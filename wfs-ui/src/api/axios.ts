@@ -25,7 +25,9 @@ wfs_api.interceptors.request.use(
       if (requestUrl.length > 65534) {
         requestUrl = requestUrl.substring(0, 65534)
       }
-      AddEntry(requestUrl)
+      AddEntry(requestUrl).catch((err) => {
+        console.error(err)
+      })
     }
     return request
   },
