@@ -25,21 +25,25 @@ app.use(cors(corsOptions))
 app.use(express.json())
 app.use(express.static(path.join(__dirname, '../../wfs-ui/build')))
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../wfs-ui/build/index.html'))
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../wfs-ui/build/index.html'), (err) => {
+    if (err) {
+      res.status(500).send(err)
+    }
+  })
 })
 
 app.post('/track', async (req, res) => {
   const url = req.body.url
-  const conn = await pool.promise().getConnection()
+
   try {
+    const conn = await pool.promise().getConnection()
     conn.execute('INSERT INTO `auditlog` (`url`) VALUES (?)', [url])
     conn.commit()
     res.send('OK')
-  } catch (err) {
-    throw err
-  } finally {
     conn.release()
+  } catch (err) {
+    res.status(500).send(err)
   }
 })
 
