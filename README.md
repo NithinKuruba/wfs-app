@@ -12,6 +12,8 @@ CHSA WEB application is designed to accept latitude/longitude coordinates and pr
 
 - Docker Compose
 
+- MySQL workbench to query the database [MySQL workbench](https://www.mysql.com/products/workbench/)
+
 ### Installing
 
 In the project directory ./wfs-app, run:
@@ -26,10 +28,25 @@ In the project directory ./wfs-app, run:
 
 - Deployes artifacts in containers
 
+### Working with application
+
+- Application can be accessed at http://localhost:3080
+
+- Use MySQL workbench to query the database
+
+- The number of API hits is stored in analytics database and auditlog table. Below are the queries
+
+`USE analytics;`
+
+`SELECT COUNT(id) as API_HITS FROM AUDITLOG;`
+
+### Un-Installing
 
 #### `docker-compose down`
 
 - Removes database and application containers
+
+### Useful Commands
 
 #### `docker system prune -a` - WARNING
 
