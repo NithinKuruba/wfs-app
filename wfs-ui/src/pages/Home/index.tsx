@@ -8,7 +8,7 @@ import LaunchIcon from '@material-ui/icons/Launch'
 const HomePage: React.FC = () => {
   const [latitude, setLatitude] = useState<string>('')
   const [longitude, setLongitude] = useState<string>('')
-  const [error, seterror] = useState<string>('')
+  const [error, setError] = useState<string>('')
   const [chsa, setChsa] = useState('')
 
   const onSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
@@ -16,16 +16,18 @@ const HomePage: React.FC = () => {
     await getCommunityHealthServiceArea({ lat: latitude, lng: longitude })
       .then((res: FeatureCollection) => {
         if (res.numberReturned < 1) {
-          seterror(
+          setError(
             'Entered Latitude/Longitude location not found in BC. Please enter valid location co-ordinates.'
           )
+          setChsa('')
         }
         res.features.map((feature) => {
           setChsa(feature.properties.CMNTY_HLTH_SERV_AREA_NAME)
+          setError('')
         })
       })
       .catch((err) => {
-        seterror(err)
+        setError(err)
       })
   }
   return (
