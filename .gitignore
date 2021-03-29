@@ -44,8 +44,6 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
-**.env
-**.env.example
 
 # System Files
 .DS_Store
