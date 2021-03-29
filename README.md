@@ -30,9 +30,11 @@ In the project directory ./wfs-app, run:
 
 ### Working with application
 
+- After installation, MySQL database will be available for connections and it can be found in docker compose logs
+
 - Application can be accessed at http://localhost:3080
 
-- Use MySQL workbench to query the database
+- Use MySQL workbench to login and query the database. The credentials are provided in the .env file under wfs-api
 
 - The number of API hits is stored in analytics database and auditlog table. Below are the queries
 
