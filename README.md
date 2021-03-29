@@ -2,46 +2,50 @@
 
 ## Description
 
-CHSA WEB UI - Contains interative web elements to accept latitude/longitude coordinates and provide the service area
+CHSA WEB application is designed to accept latitude/longitude coordinates and provide the associated community health service area
 
 ## Getting Started
 
-### Dependencies
+### Dependencies/Pre-requisites
 
-- [Node.js](https://nodejs.org/en/) - You’ll need to have Node >= 10.x and npm >= 5.6 on your machine. You can use [nvm](https://github.com/nvm-sh/nvm#installation) (macOS/Linux) or [nvm-windows](https://github.com/coreybutler/nvm-windows#node-version-manager-nvm-for-windows) to switch Node versions between different projects.
+- Docker [Mac](https://hub.docker.com/editions/community/docker-ce-desktop-mac/), [Win](https://hub.docker.com/editions/community/docker-ce-desktop-windows/), [Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/), [Fedora](https://docs.docker.com/install/linux/docker-ce/fedora/)
 
-Note: Node 10 is being used as a base image in our docker deployment strategy.
+- Docker Compose
 
 ### Installing
 
-In the project directory ./wfs-ui, run:
+In the project directory ./wfs-app, run:
 
-#### `npm install`
+#### `docker-compose up`
 
-Installs all dependencies in the node_modules folder.
+- Downloads mysql:latest and node:10 images
+
+- Builds wfs-ui and wfs-api artifacts
+
+- Creates a MySQL database instance and creates database objects by running wfs-app/Analytics.sql
+
+- Deployes artifacts in containers
 
 
-## Available Scripts
+#### `docker-compose down`
 
-In the project directory, you can run:
+- Removes database and application containers
 
-### `npm start`
+#### `docker system prune -a` - WARNING
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+This will remove:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- All stopped containers
 
-### `npm run build`
+- All networks not used by at least one container
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- All images without at least one container associated to them
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- All build cache
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### `docker volume prune` - WARNING
+
+- This will remove all local volumes not used by atleast one container
 
 ## License
 
