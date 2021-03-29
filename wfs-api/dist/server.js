@@ -41,8 +41,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var path_1 = __importDefault(require("path"));
-var promise_1 = __importDefault(require("mysql2/promise"));
-var pool = promise_1.default.createPool({
+var mysql2_1 = __importDefault(require("mysql2"));
+var cors_1 = __importDefault(require("cors"));
+var pool = mysql2_1.default.createPool({
     host: 'localhost',
     user: 'wfs',
     password: 'wfs',
@@ -53,59 +54,41 @@ var pool = promise_1.default.createPool({
 });
 var app = express_1.default();
 var port = 3080;
+var corsOptions = {
+    origin: ['http://localhost:3000', 'http://localhost:3080'],
+    optionsSuccessStatus: 200,
+};
+app.use(cors_1.default(corsOptions));
 app.use(express_1.default.json());
 app.use(express_1.default.static(path_1.default.join(__dirname, '../../wfs-ui/build')));
 app.get('/', function (req, res) {
     res.sendFile(path_1.default.join(__dirname, '../../wfs-ui/build/index.html'));
 });
-app.post('/track', function (req, res) {
-    var id = req.body.id;
-    var name = req.body.name;
-    insertRecord(id, name)
-        .then(function () {
-        res.send('OK');
-    })
-        .catch(function (err) {
-        throw err;
+app.post('/track', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var url, conn;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                url = req.body.url;
+                return [4, pool.promise().getConnection()];
+            case 1:
+                conn = _a.sent();
+                try {
+                    conn.execute('INSERT INTO `auditlog` (`url`) VALUES (?)', [url]);
+                    conn.commit();
+                    res.send('OK');
+                }
+                catch (err) {
+                    throw err;
+                }
+                finally {
+                    conn.release();
+                }
+                return [2];
+        }
     });
-});
-// start the express server
+}); });
 app.listen(port, function () {
-    // tslint:disable-next-line:no-console
     console.log("server started at http://localhost:" + port);
 });
-function insertRecord(id, name) {
-    return __awaiter(this, void 0, void 0, function () {
-        var sql, connection, err_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    sql = 'INSERT INTO auditlog (id, name) VALUES(?, ?)';
-                    return [4 /*yield*/, pool.getConnection()];
-                case 1:
-                    connection = _a.sent();
-                    _a.label = 2;
-                case 2:
-                    _a.trys.push([2, 5, 7, 8]);
-                    return [4 /*yield*/, connection.query(sql, [id, name])];
-                case 3:
-                    _a.sent();
-                    return [4 /*yield*/, connection.commit()];
-                case 4:
-                    _a.sent();
-                    return [3 /*break*/, 8];
-                case 5:
-                    err_1 = _a.sent();
-                    return [4 /*yield*/, connection.rollback()];
-                case 6:
-                    _a.sent();
-                    throw err_1;
-                case 7:
-                    connection.release();
-                    return [7 /*endfinally*/];
-                case 8: return [2 /*return*/];
-            }
-        });
-    });
-}
 //# sourceMappingURL=server.js.map

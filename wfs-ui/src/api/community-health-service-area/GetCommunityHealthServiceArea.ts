@@ -1,4 +1,4 @@
-import axios from 'api/axios'
+import { wfs_api } from 'api/axios'
 import { FeatureCollection, RequestCHSA } from 'api/model/model'
 import { REQUEST_TYPE_GET_FEATURE, RESPONSE_FORMAT } from 'utils/constants'
 
@@ -17,7 +17,7 @@ export async function getCommunityHealthServiceArea(
     '&outputFormat=' +
     RESPONSE_FORMAT
   try {
-    const { data } = await axios.get<FeatureCollection>(url)
+    const { data } = await wfs_api.get<FeatureCollection>(url)
     return data
   } catch (error) {
     return error
